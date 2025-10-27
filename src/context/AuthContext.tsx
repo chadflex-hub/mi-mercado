@@ -20,7 +20,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Check for existing session on mount
   useEffect(() => {
@@ -28,32 +28,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
-    setIsLoading(false);
   }, []);
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Simulate API call with timeout
+    await new Promise(resolve => setTimeout(resolve, 1500));
     
     if (email === 'demo@mimercado.com' && password === 'demo123') {
       const userData = { id: '1', email, name: 'Usuario Demo' };
       setUser(userData);
       localStorage.setItem('mi-mercado-user', JSON.stringify(userData));
     } else {
-      throw new Error('Credenciales incorrectas');
+      throw new Error('Credenciales incorrectas. Use: demo@mimercado.com / demo123');
     }
+    
     setIsLoading(false);
   };
 
   const register = async (name: string, email: string, password: string) => {
     setIsLoading(true);
+    
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 1500));
     
     const userData = { id: Date.now().toString(), email, name };
     setUser(userData);
     localStorage.setItem('mi-mercado-user', JSON.stringify(userData));
+    
     setIsLoading(false);
   };
 

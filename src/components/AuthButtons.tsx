@@ -9,6 +9,12 @@ export function AuthButtons() {
   if (user) {
     return (
       <div className="flex items-center gap-4">
+        <Link 
+          href="/perfil" 
+          className="text-gray-600 hover:text-blue-600 font-medium transition-colors"
+        >
+          Mi Perfil
+        </Link>
         <span className="text-gray-600">Hola, {user.name}</span>
         <button
           onClick={logout}

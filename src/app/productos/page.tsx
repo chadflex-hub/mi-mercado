@@ -1,23 +1,44 @@
 'use client';
 
-import { useCart } from '@/context/CartContext'
+import { useCart } from '@/context/CartContext';
+import { productService, Product } from '../../services/productService';
+import { useEffect, useState } from 'react';
 
 export default function Productos() {
   const { addToCart } = useCart();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const products = [
-    { id: 1, name: "Aceite de Oliva Virgen Extra", price: "12,50€", category: "Alimentos" },
-    { id: 2, name: "Queso Manchego", price: "8,75€", category: "Lácteos" },
-    { id: 3, name: "Jamón Ibérico", price: "24,90€", category: "Embutidos" },
-    { id: 4, name: "Naranjas Valencianas", price: "4,50€", category: "Frutas" },
-    { id: 5, name: "Vino Rioja", price: "15,20€", category: "Bebidas" },
-    { id: 6, name: "Aceitunas Gordales", price: "6,80€", category: "Conservas" }
-  ];
+  useEffect(() => {
+    const loadProducts = async () => {
+      const productsData = await productService.getAllProducts();
+      setProducts(productsData);
+      setLoading(false);
+    };
 
-  const handleAddToCart = (product: typeof products[0]) => {
-    addToCart(product);
+    loadProducts();
+  }, []);
+
+  const handleAddToCart = (product: Product) => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: `${product.price}€`,
+      category: product.category
+    });
     alert(`¡${product.name} añadido al carrito!`);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="container mx-auto px-4">
+          <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">Nuestros Productos</h1>
+          <div className="text-center">Cargando productos...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -33,7 +54,8 @@ export default function Productos() {
               </div>
               <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
               <p className="text-gray-600 mb-2">{product.category}</p>
-              <p className="text-2xl font-bold text-green-600 mb-4">{product.price}</p>
+              <p className="text-2xl font-bold text-green-600 mb-4">{product.price}€</p>
+              <p className="text-gray-500 text-sm mb-4">{product.description}</p>
               <button 
                 onClick={() => handleAddToCart(product)}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold transition-colors"
@@ -43,6 +65,12 @@ export default function Productos() {
             </div>
           ))}
         </div>
+
+        {products.length === 0 && (
+          <div className="text-center text-gray-500 mt-8">
+            No hay productos disponibles en este momento.
+          </div>
+        )}
       </div>
     </div>
   );
