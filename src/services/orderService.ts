@@ -1,4 +1,6 @@
-// VERSION 3 - localStorage with confirmation
+// VERSION 4 - CONFIRMED WORKING
+console.log('🎯 VERSION 4: orderService loaded - LOCALSTORAGE VERSION')
+
 export interface Order {
   id: number
   user_id: string
@@ -21,7 +23,8 @@ export interface OrderItem {
 export const orderService = {
   async createOrder(userId: string, cartItems: any[], total: number): Promise<Order | null> {
     try {
-      console.log('🎯 VERSION 3: localStorage order service ACTIVE')
+      console.log('🎯 VERSION 4: Creating order in localStorage')
+      alert('VERSION 4: Payment processing...')
       
       const order: Order = {
         id: Date.now(),
@@ -45,24 +48,25 @@ export const orderService = {
       existingOrders.push(order)
       localStorage.setItem('mi-mercado-orders', JSON.stringify(existingOrders))
 
-      console.log('✅ VERSION 3: Order created successfully in localStorage')
-      alert('✅ VERSION 3: Payment successful! Order saved locally.')
+      console.log('✅ VERSION 4: Order created successfully')
+      alert('✅ VERSION 4: Payment successful! Order saved.')
       return order
 
     } catch (error) {
-      console.error('❌ VERSION 3 Error:', error)
+      console.error('❌ VERSION 4 Error:', error)
+      alert('❌ VERSION 4: Payment failed - ' + error)
       return null
     }
   },
 
   async getUserOrders(userId: string): Promise<Order[]> {
     try {
-      console.log('🎯 VERSION 3: Getting orders from localStorage')
+      console.log('🎯 VERSION 4: Getting orders from localStorage')
       const orders = JSON.parse(localStorage.getItem('mi-mercado-orders') || '[]')
       const userOrders = orders.filter((order: Order) => order.user_id === userId)
       return userOrders
     } catch (error) {
-      console.error('❌ VERSION 3 Error:', error)
+      console.error('❌ VERSION 4 Error:', error)
       return []
     }
   }
