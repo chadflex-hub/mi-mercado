@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '@/context/AuthContext';
-import { orderService, Order } from '../../../services/orderServiceV2';
+import { orderService, Order } from '@/services/orderServiceV2';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 

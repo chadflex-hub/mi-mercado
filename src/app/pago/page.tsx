@@ -4,7 +4,7 @@ import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { orderService } from '../../../services/orderServiceV2';
+import { orderService } from '@/services/orderServiceV2';
 
 export default function Pago() {
   const { cartItems, clearCart } = useCart();
