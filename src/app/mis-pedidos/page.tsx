@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '@/context/AuthContext';
-import { orderService, Order } from '../../services/orderService';
+import { orderService, Order } from '../../../services/orderServiceV2';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
@@ -13,6 +13,7 @@ export default function MisPedidos() {
   useEffect(() => {
     const loadOrders = async () => {
       if (user) {
+        console.log('🔥 VERSION 2: Loading orders from localStorage');
         const ordersData = await orderService.getUserOrders(user.id);
         setOrders(ordersData);
       }

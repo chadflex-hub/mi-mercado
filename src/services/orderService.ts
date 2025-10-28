@@ -1,5 +1,5 @@
-// VERSION 4 - CONFIRMED WORKING
-console.log('🎯 VERSION 4: orderService loaded - LOCALSTORAGE VERSION')
+// VERSION 5 - LOCALSTORAGE ONLY - NO SUPABASE
+console.log('🎯 VERSION 5: orderService loaded - LOCALSTORAGE VERSION')
 
 export interface Order {
   id: number
@@ -23,9 +23,9 @@ export interface OrderItem {
 export const orderService = {
   async createOrder(userId: string, cartItems: any[], total: number): Promise<Order | null> {
     try {
-      console.log('🎯 VERSION 4: Creating order in localStorage')
-      alert('VERSION 4: Payment processing...')
+      console.log('🎯 VERSION 5: Creating order in localStorage')
       
+      // Create order object
       const order: Order = {
         id: Date.now(),
         user_id: userId,
@@ -48,26 +48,36 @@ export const orderService = {
       existingOrders.push(order)
       localStorage.setItem('mi-mercado-orders', JSON.stringify(existingOrders))
 
-      console.log('✅ VERSION 4: Order created successfully')
-      alert('✅ VERSION 4: Payment successful! Order saved.')
+      console.log('✅ VERSION 5: Order created successfully in localStorage')
       return order
 
     } catch (error) {
-      console.error('❌ VERSION 4 Error:', error)
-      alert('❌ VERSION 4: Payment failed - ' + error)
+      console.error('❌ VERSION 5 Error:', error)
       return null
     }
   },
 
   async getUserOrders(userId: string): Promise<Order[]> {
     try {
-      console.log('🎯 VERSION 4: Getting orders from localStorage')
+      console.log('🎯 VERSION 5: Getting orders from localStorage')
       const orders = JSON.parse(localStorage.getItem('mi-mercado-orders') || '[]')
       const userOrders = orders.filter((order: Order) => order.user_id === userId)
+      console.log('✅ VERSION 5: Found orders:', userOrders)
       return userOrders
     } catch (error) {
-      console.error('❌ VERSION 4 Error:', error)
+      console.error('❌ VERSION 5 Error:', error)
       return []
+    }
+  },
+
+  async getOrderById(orderId: number): Promise<Order | null> {
+    try {
+      const orders = JSON.parse(localStorage.getItem('mi-mercado-orders') || '[]')
+      const order = orders.find((order: Order) => order.id === orderId)
+      return order || null
+    } catch (error) {
+      console.error('❌ VERSION 5 Error:', error)
+      return null
     }
   }
 }

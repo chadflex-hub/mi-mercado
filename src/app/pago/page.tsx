@@ -4,7 +4,7 @@ import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { orderService } from '../../services/orderService';
+import { orderService } from '../../../services/orderServiceV2';
 
 export default function Pago() {
   const { cartItems, clearCart } = useCart();
@@ -29,23 +29,25 @@ export default function Pago() {
     setIsProcessing(true);
     
     try {
+      console.log('🔥 VERSION 2: Starting payment process');
+      
       // Simulate payment processing
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // Create order in database
+      // Create order using NEW LOCALSTORAGE service
       const order = await orderService.createOrder(user.id, cartItems, calculateTotal());
       
       if (order) {
-        console.log('Order created successfully:', order)
+        console.log('🔥 VERSION 2: Order created successfully');
         // Clear cart and show success
         clearCart();
         alert(`¡Pedido #${order.id} realizado con éxito! ¡Gracias por tu compra en Mi Mercado!`);
         router.push('/mis-pedidos');
       } else {
-        throw new Error('Error al crear el pedido - order is null');
+        throw new Error('Order creation failed');
       }
     } catch (error) {
-      console.error('Payment error:', error)
+      console.error('🔥 VERSION 2: Payment error:', error);
       alert('Error procesando el pago. Inténtalo de nuevo.');
     } finally {
       setIsProcessing(false);
