@@ -45,8 +45,16 @@ export default function Carrito() {
               {cartItems.map((item) => (
                 <div key={item.id} className="flex items-center justify-between p-6 border-b">
                   <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 bg-gradient-to-br from-amber-50 to-green-50 rounded-lg flex items-center justify-center">
-                      <span className="text-2xl">🛒</span>
+                    <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
+                      {item.image_url ? (
+                        <img 
+                          src={item.image_url} 
+                          alt={item.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-2xl">🛒</span>
+                      )}
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold">{item.name}</h3>
@@ -86,9 +94,12 @@ export default function Carrito() {
                 <span className="text-green-600">{calculateTotal()}€</span>
               </div>
             </div>
-            <button className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold text-lg transition-colors">
+            <Link 
+              href="/pago"
+              className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold text-lg transition-colors text-center block"
+            >
               Proceder al Pago
-            </button>
+            </Link>
             <Link 
               href="/productos"
               className="block text-center text-blue-600 hover:text-blue-700 mt-4 font-semibold"

@@ -10,6 +10,12 @@ export function AuthButtons() {
     return (
       <div className="flex items-center gap-4">
         <Link 
+          href="/mis-pedidos" 
+          className="text-gray-600 hover:text-blue-600 font-medium transition-colors"
+        >
+          Mis Pedidos
+        </Link>
+        <Link 
           href="/perfil" 
           className="text-gray-600 hover:text-blue-600 font-medium transition-colors"
         >

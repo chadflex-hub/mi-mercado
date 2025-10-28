@@ -20,7 +20,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Check for existing session on mount
   useEffect(() => {
@@ -28,13 +28,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
+    setIsLoading(false);
   }, []);
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     
-    // Simulate API call with timeout
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    // Simple authentication that works everywhere
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
     if (email === 'demo@mimercado.com' && password === 'demo123') {
       const userData = { id: '1', email, name: 'Usuario Demo' };
@@ -50,8 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const register = async (name: string, email: string, password: string) => {
     setIsLoading(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
     const userData = { id: Date.now().toString(), email, name };
     setUser(userData);

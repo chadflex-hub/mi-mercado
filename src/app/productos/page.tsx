@@ -24,7 +24,8 @@ export default function Productos() {
       id: product.id,
       name: product.name,
       price: `${product.price}€`,
-      category: product.category
+      category: product.category,
+      image_url: product.image_url || undefined
     });
     alert(`¡${product.name} añadido al carrito!`);
   };
@@ -49,9 +50,20 @@ export default function Productos() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {products.map((product) => (
             <div key={product.id} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-              <div className="h-48 bg-gradient-to-br from-amber-50 to-green-50 rounded-lg mb-4 flex items-center justify-center">
-                <span className="text-4xl">🛒</span>
+              <div className="h-48 bg-gray-100 rounded-lg mb-4 overflow-hidden">
+                {product.image_url ? (
+                  <img 
+                    src={product.image_url} 
+                    alt={product.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                    <span className="text-4xl">🛒</span>
+                  </div>
+                )}
               </div>
+              
               <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
               <p className="text-gray-600 mb-2">{product.category}</p>
               <p className="text-2xl font-bold text-green-600 mb-4">{product.price}€</p>

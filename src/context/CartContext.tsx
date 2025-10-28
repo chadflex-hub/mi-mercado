@@ -7,6 +7,7 @@ interface Product {
   name: string;
   price: string;
   category: string;
+  image_url?: string;
 }
 
 interface CartItem extends Product {
