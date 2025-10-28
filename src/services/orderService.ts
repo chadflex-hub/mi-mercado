@@ -1,5 +1,4 @@
-import { supabase } from '@/lib/supabase'
-
+// VERSION 3 - localStorage with confirmation
 export interface Order {
   id: number
   user_id: string
@@ -21,79 +20,50 @@ export interface OrderItem {
 
 export const orderService = {
   async createOrder(userId: string, cartItems: any[], total: number): Promise<Order | null> {
-    // First create the order
-    const { data: order, error: orderError } = await supabase
-      .from('orders')
-      .insert([
-        {
-          user_id: userId,
-          total_amount: total,
-          status: 'completed'
-        }
-      ])
-      .select()
-      .single()
+    try {
+      console.log('🎯 VERSION 3: localStorage order service ACTIVE')
+      
+      const order: Order = {
+        id: Date.now(),
+        user_id: userId,
+        total_amount: total,
+        status: 'completed',
+        created_at: new Date().toISOString(),
+        items: cartItems.map((item, index) => ({
+          id: index + 1,
+          order_id: Date.now(),
+          product_id: item.id,
+          product_name: item.name,
+          product_price: parseFloat(item.price.replace('€', '').replace(',', '.')),
+          quantity: item.quantity,
+          product_image: item.image_url
+        }))
+      }
 
-    if (orderError) {
-      console.error('Error creating order:', orderError)
+      // Save to localStorage
+      const existingOrders = JSON.parse(localStorage.getItem('mi-mercado-orders') || '[]')
+      existingOrders.push(order)
+      localStorage.setItem('mi-mercado-orders', JSON.stringify(existingOrders))
+
+      console.log('✅ VERSION 3: Order created successfully in localStorage')
+      alert('✅ VERSION 3: Payment successful! Order saved locally.')
+      return order
+
+    } catch (error) {
+      console.error('❌ VERSION 3 Error:', error)
       return null
     }
-
-    // Then create order items
-    const orderItems = cartItems.map(item => ({
-      order_id: order.id,
-      product_id: item.id,
-      product_name: item.name,
-      product_price: parseFloat(item.price.replace('€', '').replace(',', '.')),
-      quantity: item.quantity,
-      product_image: item.image_url
-    }))
-
-    const { error: itemsError } = await supabase
-      .from('order_items')
-      .insert(orderItems)
-
-    if (itemsError) {
-      console.error('Error creating order items:', itemsError)
-      return null
-    }
-
-    return order
   },
 
   async getUserOrders(userId: string): Promise<Order[]> {
-    const { data: orders, error } = await supabase
-      .from('orders')
-      .select(`
-        *,
-        order_items (*)
-      `)
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false })
-
-    if (error) {
-      console.error('Error fetching orders:', error)
+    try {
+      console.log('🎯 VERSION 3: Getting orders from localStorage')
+      const orders = JSON.parse(localStorage.getItem('mi-mercado-orders') || '[]')
+      const userOrders = orders.filter((order: Order) => order.user_id === userId)
+      return userOrders
+    } catch (error) {
+      console.error('❌ VERSION 3 Error:', error)
       return []
     }
-
-    return orders || []
-  },
-
-  async getOrderById(orderId: number): Promise<Order | null> {
-    const { data: order, error } = await supabase
-      .from('orders')
-      .select(`
-        *,
-        order_items (*)
-      `)
-      .eq('id', orderId)
-      .single()
-
-    if (error) {
-      console.error('Error fetching order:', error)
-      return null
-    }
-
-    return order
   }
 }

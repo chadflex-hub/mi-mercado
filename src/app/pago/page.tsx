@@ -36,14 +36,16 @@ export default function Pago() {
       const order = await orderService.createOrder(user.id, cartItems, calculateTotal());
       
       if (order) {
+        console.log('Order created successfully:', order)
         // Clear cart and show success
         clearCart();
         alert(`¡Pedido #${order.id} realizado con éxito! ¡Gracias por tu compra en Mi Mercado!`);
         router.push('/mis-pedidos');
       } else {
-        throw new Error('Error al crear el pedido');
+        throw new Error('Error al crear el pedido - order is null');
       }
     } catch (error) {
+      console.error('Payment error:', error)
       alert('Error procesando el pago. Inténtalo de nuevo.');
     } finally {
       setIsProcessing(false);
